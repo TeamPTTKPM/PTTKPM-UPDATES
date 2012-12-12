@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="10" height="10" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="ts" tilewidth="32" tileheight="32">
+  <image source="gfx/ts.png" width="512" height="512"/>
+ </tileset>
+ <layer name="Obstruction" width="10" height="10">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC4tnYGCIpyJmhmIYnxEN41N3AooZ8ZhPijps9p7AgdH1I9uBTONSR8g8YjEA9v5s4JABAAA=
+  </data>
+ </layer>
+</map>

@@ -1,5 +1,5 @@
 package android.game.screen;
 
-public class AboutScreen {
+public class AboutScreen extends Screen{
 
 }

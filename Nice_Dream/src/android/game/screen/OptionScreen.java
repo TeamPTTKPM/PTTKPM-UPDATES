@@ -1,5 +1,5 @@
 package android.game.screen;
 
-public class OptionScreen {
+public class OptionScreen extends Screen{
 
 }

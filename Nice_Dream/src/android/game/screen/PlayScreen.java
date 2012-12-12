@@ -1,5 +1,11 @@
 package android.game.screen;
 
-public class PlayScreen {
+import org.andengine.entity.scene.Scene;
 
+public class PlayScreen extends Screen{
+	
+	@Override
+	protected Scene onCreateScene() {
+		return this._scene;
+	}
 }

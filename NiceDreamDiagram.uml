@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XPD:PROJECT xmlns:XPD="http://www.staruml.com" version="1">
+<XPD:HEADER>
+<XPD:SUBUNITS>
+</XPD:SUBUNITS>
+<XPD:PROFILES>
+<XPD:PROFILE>UMLStandard</XPD:PROFILE>
+</XPD:PROFILES>
+</XPD:HEADER>
+<XPD:BODY>
+<XPD:OBJ name="DocumentElement" type="UMLProject" guid="cLYLsLQOaEGV8qJDVQb2uQAA">
+<XPD:ATTR name="Title" type="string">Untitled</XPD:ATTR>
+<XPD:ATTR name="#OwnedElements" type="integer">5</XPD:ATTR>
+<XPD:OBJ name="OwnedElements[0]" type="UMLModel" guid="D88nLXSE3EaqmpHO55vzTwAA">
+<XPD:ATTR name="Name" type="string">Use Case Model</XPD:ATTR>
+<XPD:ATTR name="StereotypeProfile" type="string">UMLStandard</XPD:ATTR>
+<XPD:ATTR name="StereotypeName" type="string">useCaseModel</XPD:ATTR>
+<XPD:REF name="Namespace">cLYLsLQOaEGV8qJDVQb2uQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[1]" type="UMLModel" guid="BXCaKMff8UiBHINK08r2CgAA">
+<XPD:ATTR name="Name" type="string">Analysis Model</XPD:ATTR>
+<XPD:ATTR name="StereotypeProfile" type="string">UMLStandard</XPD:ATTR>
+<XPD:ATTR name="StereotypeName" type="string">analysisModel</XPD:ATTR>
+<XPD:REF name="Namespace">cLYLsLQOaEGV8qJDVQb2uQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[2]" type="UMLModel" guid="pvzLyI2QdUW1nYnhaFORnwAA">
+<XPD:ATTR name="Name" type="string">Design Model</XPD:ATTR>
+<XPD:ATTR name="StereotypeProfile" type="string">UMLStandard</XPD:ATTR>
+<XPD:ATTR name="StereotypeName" type="string">designModel</XPD:ATTR>
+<XPD:REF name="Namespace">cLYLsLQOaEGV8qJDVQb2uQAA</XPD:REF>
+<XPD:ATTR name="#OwnedElements" type="integer">5</XPD:ATTR>
+<XPD:OBJ name="OwnedElements[0]" type="UMLClass" guid="SGoQoCL8ckWlP28PQesAnQAA">
+<XPD:ATTR name="Name" type="string">State</XPD:ATTR>
+<XPD:ATTR name="IsAbstract" type="boolean">True</XPD:ATTR>
+<XPD:REF name="Namespace">pvzLyI2QdUW1nYnhaFORnwAA</XPD:REF>
+<XPD:ATTR name="#Specializations" type="integer">1</XPD:ATTR>
+<XPD:REF name="Specializations[0]">RVfrTAd4jUCIMPatZVqbrgAA</XPD:REF>
+<XPD:ATTR name="#Operations" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="Operations[0]" type="UMLOperation" guid="Q6oYImQip0anir4FrFRt0wAA">
+<XPD:ATTR name="Name" type="string">Handle</XPD:ATTR>
+<XPD:REF name="Owner">SGoQoCL8ckWlP28PQesAnQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:ATTR name="#Associations" type="integer">1</XPD:ATTR>
+<XPD:REF name="Associations[0]">n3hN3aRgBEO0ISt1XujPaQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[1]" type="UMLClass" guid="uNXazgkkGkSUc8Hf/DYCuQAA">
+<XPD:ATTR name="Name" type="string">ConcreteState</XPD:ATTR>
+<XPD:REF name="Namespace">pvzLyI2QdUW1nYnhaFORnwAA</XPD:REF>
+<XPD:ATTR name="#Generalizations" type="integer">1</XPD:ATTR>
+<XPD:REF name="Generalizations[0]">RVfrTAd4jUCIMPatZVqbrgAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[2]" type="UMLClass" guid="e1RGtWYz40usNlYIqabqwwAA">
+<XPD:ATTR name="Name" type="string">Context</XPD:ATTR>
+<XPD:REF name="Namespace">pvzLyI2QdUW1nYnhaFORnwAA</XPD:REF>
+<XPD:ATTR name="#Operations" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="Operations[0]" type="UMLOperation" guid="OLTqGGaHgESnmDHYfU7eAwAA">
+<XPD:ATTR name="Name" type="string">Request</XPD:ATTR>
+<XPD:REF name="Owner">e1RGtWYz40usNlYIqabqwwAA</XPD:REF>
+</XPD:OBJ>
+<XPD:ATTR name="#Associations" type="integer">1</XPD:ATTR>
+<XPD:REF name="Associations[0]">1tI4W7RYikWf7xFB3rYHnwAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[3]" type="UMLAssociation" guid="bqYDHzp/PkaamWYcXzkoaQAA">
+<XPD:REF name="Namespace">pvzLyI2QdUW1nYnhaFORnwAA</XPD:REF>
+<XPD:ATTR name="#Connections" type="integer">2</XPD:ATTR>
+<XPD:OBJ name="Connections[0]" type="UMLAssociationEnd" guid="1tI4W7RYikWf7xFB3rYHnwAA">
+<XPD:ATTR name="IsNavigable" type="boolean">False</XPD:ATTR>
+<XPD:ATTR name="Aggregation" type="UMLAggregationKind">akAggregate</XPD:ATTR>
+<XPD:REF name="Association">bqYDHzp/PkaamWYcXzkoaQAA</XPD:REF>
+<XPD:REF name="Participant">e1RGtWYz40usNlYIqabqwwAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="Connections[1]" type="UMLAssociationEnd" guid="n3hN3aRgBEO0ISt1XujPaQAA">
+<XPD:ATTR name="Name" type="string">state</XPD:ATTR>
+<XPD:REF name="Association">bqYDHzp/PkaamWYcXzkoaQAA</XPD:REF>
+<XPD:REF name="Participant">SGoQoCL8ckWlP28PQesAnQAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[4]" type="UMLGeneralization" guid="RVfrTAd4jUCIMPatZVqbrgAA">
+<XPD:REF name="Namespace">pvzLyI2QdUW1nYnhaFORnwAA</XPD:REF>
+<XPD:REF name="Child">uNXazgkkGkSUc8Hf/DYCuQAA</XPD:REF>
+<XPD:REF name="Parent">SGoQoCL8ckWlP28PQesAnQAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[3]" type="UMLModel" guid="8dohFKCI+UO15R1mRribYQAA">
+<XPD:ATTR name="Name" type="string">Implementation Model</XPD:ATTR>
+<XPD:ATTR name="StereotypeProfile" type="string">UMLStandard</XPD:ATTR>
+<XPD:ATTR name="StereotypeName" type="string">implementationModel</XPD:ATTR>
+<XPD:REF name="Namespace">cLYLsLQOaEGV8qJDVQb2uQAA</XPD:REF>
+<XPD:ATTR name="#OwnedDiagrams" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="OwnedDiagrams[0]" type="UMLComponentDiagram" guid="aKT3N2L6406k+kDGZcni1QAA">
+<XPD:ATTR name="Name" type="string">Main</XPD:ATTR>
+<XPD:REF name="DiagramOwner">8dohFKCI+UO15R1mRribYQAA</XPD:REF>
+<XPD:OBJ name="DiagramView" type="UMLComponentDiagramView" guid="vGnPcrdDjkGrneflV9tuZQAA">
+<XPD:REF name="Diagram">aKT3N2L6406k+kDGZcni1QAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
+</XPD:OBJ>
+<XPD:OBJ name="OwnedElements[4]" type="UMLModel" guid="b4XS0cJM/0yWXSfpo7+C6gAA">
+<XPD:ATTR name="Name" type="string">Deployment Model</XPD:ATTR>
+<XPD:ATTR name="StereotypeProfile" type="string">UMLStandard</XPD:ATTR>
+<XPD:ATTR name="StereotypeName" type="string">deploymentModel</XPD:ATTR>
+<XPD:REF name="Namespace">cLYLsLQOaEGV8qJDVQb2uQAA</XPD:REF>
+<XPD:ATTR name="#OwnedDiagrams" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="OwnedDiagrams[0]" type="UMLDeploymentDiagram" guid="24nId8D3pkiKTeHjyYccUQAA">
+<XPD:ATTR name="Name" type="string">Main</XPD:ATTR>
+<XPD:REF name="DiagramOwner">b4XS0cJM/0yWXSfpo7+C6gAA</XPD:REF>
+<XPD:OBJ name="DiagramView" type="UMLDeploymentDiagramView" guid="N8iYDxC/mkyjrfznlBd6aAAA">
+<XPD:REF name="Diagram">24nId8D3pkiKTeHjyYccUQAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
+</XPD:OBJ>
+</XPD:OBJ>
+</XPD:BODY>
+</XPD:PROJECT>

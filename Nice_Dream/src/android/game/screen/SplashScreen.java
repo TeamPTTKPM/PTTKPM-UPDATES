@@ -10,6 +10,8 @@ import android.os.Handler;
 
 public class SplashScreen extends Screen {
 
+	private static final long DELAY = 1000;
+
 	@Override
 	protected void onCreateResources() {
 	}
@@ -18,9 +20,9 @@ public class SplashScreen extends Screen {
 	protected Scene onCreateScene() {
 		mEngine.registerUpdateHandler(new FPSLogger());
 		_scene = new Scene();
-		_scene.setBackground(new Background(Color.BLUE));	
+		_scene.setBackground(new Background(Color.WHITE));	
 		
-		handler.sendEmptyMessageDelayed(1, 5000);
+		handler.sendEmptyMessageDelayed(1, DELAY);
 		
 		return _scene;
 	}

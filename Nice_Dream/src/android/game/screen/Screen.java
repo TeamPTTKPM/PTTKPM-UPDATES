@@ -1,6 +1,7 @@
 package android.game.screen;
 
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
@@ -12,16 +13,15 @@ import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
 
 import android.graphics.Color;
-import android.view.Display;
 
 public class Screen extends SimpleBaseGameActivity{
 
 	
 	// ========================|| FIELD || ======================== 
-	protected float CAMERA_WIDTH;
-	protected float CAMERA_HEIGHT;
+	protected float CAMERA_WIDTH = 480;
+	protected float CAMERA_HEIGHT = 320;
 	
-	protected Camera _camera;
+	protected ZoomCamera _camera;
 	protected Scene _scene;
 	
 	// Font
@@ -30,12 +30,12 @@ public class Screen extends SimpleBaseGameActivity{
 	
 	@Override
 	public EngineOptions onCreateEngineOptions() {
-		Display display = getWindowManager().getDefaultDisplay();
+		/*Display display = getWindowManager().getDefaultDisplay();
 		
 		CAMERA_WIDTH = display.getWidth();
-		CAMERA_HEIGHT = display.getHeight();
+		CAMERA_HEIGHT = display.getHeight();*/
 		
-		_camera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+		_camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
 		  EngineOptions en = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(
 		    CAMERA_WIDTH, CAMERA_HEIGHT), _camera);
 		 

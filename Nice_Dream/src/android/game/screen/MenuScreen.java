@@ -1,7 +1,13 @@
 package android.game.screen;
 
+import org.andengine.engine.camera.BoundCamera;
+import org.andengine.engine.options.EngineOptions;
+import org.andengine.engine.options.ScreenOrientation;
+import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
+import org.andengine.entity.modifier.RotationAtModifier;
+import org.andengine.entity.modifier.ScaleAtModifier;
 import org.andengine.entity.scene.Scene;
-import org.andengine.entity.scene.background.SpriteBackground;
+import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
 import org.andengine.entity.scene.menu.item.IMenuItem;
@@ -14,8 +20,10 @@ import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.TextureRegion;
+import org.andengine.util.color.Color;
 
 import android.content.Intent;
+import android.os.Handler;
 
 public class MenuScreen extends Screen implements IOnMenuItemClickListener {
 
@@ -31,11 +39,13 @@ public class MenuScreen extends Screen implements IOnMenuItemClickListener {
 	private TextureRegion _bg_TextureRegion;
 	private Sprite _bg_Sprite;
 
+	private Handler _myHandler = new Handler();
+	
 	// ================ || OVERIDE METHOD || ================
 	public MenuScreen() {
 		_listNameMenuItem = new String[MenuStates.NUM_MENU];
 	}
-
+	
 	@Override
 	protected void onCreateResources() {
 		super.onCreateResources();
@@ -48,35 +58,43 @@ public class MenuScreen extends Screen implements IOnMenuItemClickListener {
 	protected Scene onCreateScene() {
 		mEngine.registerUpdateHandler(new FPSLogger());
 		_scene = new Scene();
-
 		// init
 		createStaticMenuScene();
 
 		_bg_Sprite = new Sprite(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT, _bg_TextureRegion, getVertexBufferObjectManager());
-		 _scene.setBackground(new SpriteBackground(_bg_Sprite));
-
+		 _scene.setBackground(new Background(Color.WHITE));
+		 
 		// add object
+		 _scene.attachChild(_bg_Sprite);
 		_scene.setChildScene(_menuScene);
 		return _scene;
+	}
+	
+	@Override
+	public void onResumeGame() {
+		super.onResumeGame();
+		//_scene.registerEntityModifier(new ScaleAtModifier(1f, 0.0f, 1.0f, CAMERA_WIDTH/2, CAMERA_HEIGHT/2));
+		//_scene.registerEntityModifier(new RotationAtModifier(1f, 0, 360, CAMERA_WIDTH/2, CAMERA_HEIGHT/2));
+		_menuScene.registerEntityModifier(new ScaleAtModifier(0.5f, 0.0f, ((CAMERA_WIDTH/3)/ _menuItem_TextureRegion.getWidth()), CAMERA_WIDTH/2, CAMERA_HEIGHT/2));
+		_menuScene.registerEntityModifier(new RotationAtModifier(1f, 0, 360, CAMERA_WIDTH/2, CAMERA_HEIGHT/2));
 	}
 	
 	@Override
 	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,
 			float pMenuItemLocalX, float pMenuItemLocalY) {
 		
-		Intent intent;
+		/*_scene.registerEntityModifier(new ScaleAtModifier(1f, 1.0f, 0.0f, CAMERA_WIDTH/2, CAMERA_HEIGHT/2));*/
+		_menuScene.registerEntityModifier(new ScaleAtModifier(1f, ((CAMERA_WIDTH/3)/ _menuItem_TextureRegion.getWidth()), 0.0f, CAMERA_WIDTH/2, CAMERA_HEIGHT/2));
+		
 		switch (pMenuItem.getID()) {
 		case MenuStates.MENU_NEWGAME:
-			intent = new Intent(this, PlayScreen.class);
-			startActivity(intent);
+			_myHandler.postDelayed(_launchPlayScreenTask,1000);
 			break;
 		case MenuStates.MENU_OPTIONS:
-			intent = new Intent(this, OptionScreen.class);
-			startActivity(intent);
+			_myHandler.postDelayed(_launchOptionScreenTask,1000);
 			break;
 		case MenuStates.MENU_ABOUT:
-			intent = new Intent(this, AboutScreen.class);
-			startActivity(intent);
+			_myHandler.postDelayed(_launchAboutScreenTask,1000);
 			break;
 		case MenuStates.MENU_QUIT:
 			this.finish();
@@ -123,7 +141,6 @@ public class MenuScreen extends Screen implements IOnMenuItemClickListener {
 			SpriteMenuItem newMenuItem = new SpriteMenuItem(i, _menuItem_TextureRegion, getVertexBufferObjectManager());
 			int cenX = 0;
 			int cenY = 0;
-
 			
 			Text text = new Text(cenX, cenY, _font, _listNameMenuItem[i], getVertexBufferObjectManager());
 			
@@ -143,4 +160,25 @@ public class MenuScreen extends Screen implements IOnMenuItemClickListener {
 
 		_menuScene.setOnMenuItemClickListener(this);
 	}
+	
+	private Runnable _launchPlayScreenTask = new Runnable() {
+        public void run() {
+    		Intent myIntent = new Intent(MenuScreen.this, PlayScreen.class);
+    		MenuScreen.this.startActivity(myIntent);
+        }
+     };
+
+     private Runnable _launchOptionScreenTask = new Runnable() {
+         public void run() {
+     		Intent myIntent = new Intent(MenuScreen.this, OptionScreen.class);
+     		MenuScreen.this.startActivity(myIntent);
+         }
+      };
+      
+      private Runnable _launchAboutScreenTask = new Runnable() {
+          public void run() {
+      		Intent myIntent = new Intent(MenuScreen.this, AboutScreen.class);
+      		MenuScreen.this.startActivity(myIntent);
+          }
+       };
 }

@@ -19,12 +19,12 @@ public class SplashScreen extends Screen {
 	@Override
 	protected Scene onCreateScene() {
 		mEngine.registerUpdateHandler(new FPSLogger());
-		_scene = new Scene();
-		_scene.setBackground(new Background(Color.WHITE));	
+		_myScene = new Scene();
+		_myScene.setBackground(new Background(Color.WHITE));	
 		
 		handler.sendEmptyMessageDelayed(1, DELAY);
 		
-		return _scene;
+		return _myScene;
 	}
 	
 	

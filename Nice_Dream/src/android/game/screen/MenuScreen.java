@@ -1,9 +1,5 @@
 package android.game.screen;
 
-import org.andengine.engine.camera.BoundCamera;
-import org.andengine.engine.options.EngineOptions;
-import org.andengine.engine.options.ScreenOrientation;
-import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.modifier.RotationAtModifier;
 import org.andengine.entity.modifier.ScaleAtModifier;
 import org.andengine.entity.scene.Scene;
@@ -57,17 +53,17 @@ public class MenuScreen extends Screen implements IOnMenuItemClickListener {
 	@Override
 	protected Scene onCreateScene() {
 		mEngine.registerUpdateHandler(new FPSLogger());
-		_scene = new Scene();
+		_myScene = new Scene();
 		// init
 		createStaticMenuScene();
 
 		_bg_Sprite = new Sprite(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT, _bg_TextureRegion, getVertexBufferObjectManager());
-		 _scene.setBackground(new Background(Color.WHITE));
+		 _myScene.setBackground(new Background(Color.WHITE));
 		 
 		// add object
-		 _scene.attachChild(_bg_Sprite);
-		_scene.setChildScene(_menuScene);
-		return _scene;
+		 _myScene.attachChild(_bg_Sprite);
+		_myScene.setChildScene(_menuScene);
+		return _myScene;
 	}
 	
 	@Override
@@ -134,7 +130,7 @@ public class MenuScreen extends Screen implements IOnMenuItemClickListener {
 	}
 	
 	private void createStaticMenuScene() {
-		_menuScene = new MenuScene(_camera);
+		_menuScene = new MenuScene(_myCamera);
 		
 		for (int i = MenuStates.MENU_NEWGAME; i <= MenuStates.MENU_QUIT; i++) {
 			

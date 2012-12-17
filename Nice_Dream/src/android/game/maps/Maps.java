@@ -14,11 +14,9 @@ import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.util.debug.Debug;
 
 import android.content.Context;
-import android.widget.Toast;
 
 public class Maps {
 	
-	private static int Count = 0;
 	public static Context _context;
 	
 	public static  TMXTiledMap getTMXTiledMap(Scene myScene, Engine engine, Context context, String nameMap)

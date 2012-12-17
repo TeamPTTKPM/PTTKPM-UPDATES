@@ -1,6 +1,6 @@
 package android.game.control;
 
-import org.andengine.engine.camera.ZoomCamera;
+import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.scene.IOnSceneTouchListener;
@@ -33,12 +33,12 @@ public class Controller {
 
 	private TouchEvent _touchEvent;
 
-	private ZoomCamera _camera;
+	private BoundCamera _camera;
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 
-	public Controller(final Scene scene,final ZoomCamera camera, final float width, final float height,
+	public Controller(final Scene scene,final BoundCamera camera, final float width, final float height,
 			final float _betweenTimeUpdates,
 			final IOnControllerListener onControllerListener) {
 
@@ -149,7 +149,6 @@ public class Controller {
 	// ===========================================================
 
 	public static interface IOnControllerListener {
-		// public void onFinish();
 
 		public void onControlChange(final int activePointerID,
 				final TouchEvent pSceneTouchEvent, final float pValueX,

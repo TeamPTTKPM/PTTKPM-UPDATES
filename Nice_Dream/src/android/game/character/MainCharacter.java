@@ -3,36 +3,41 @@ package android.game.character;
 import java.util.Arrays;
 
 import org.andengine.engine.Engine;
-import org.andengine.entity.IEntity;
+import org.andengine.engine.camera.BoundCamera;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.AnimatedSprite;
+import org.andengine.extension.tmx.TMXLayer;
+import org.andengine.extension.tmx.TMXProperties;
+import org.andengine.extension.tmx.TMXTile;
+import org.andengine.extension.tmx.TMXTileProperty;
+import org.andengine.extension.tmx.TMXTiledMap;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 
 import android.content.Context;
+import android.game.character.Const.CharacterImageStates;
+import android.game.character.Const.CharacterStates;
 
 public class MainCharacter implements ISprite {
 
 	private Scene _myScene;
+	private BoundCamera _myCamera;
 
-	private int MOVE_STATE = MoveStates.STAND;
-	private static final long DURATION = 300;
+	private int MoveState = CharacterStates.STAND;
+	private int ImageState = CharacterImageStates.IMAGE_STAND;
+	private static final long DURATION = 100;
 	private long[] _duration;
+
 	/*
-	 * private final int[] ANIMATED_DOWN = { 0, 1, 2, 3, 4, 5, 6, 7 }; private
-	 * final int[] ANIMATED_UP = { 8, 9, 10, 11, 12, 13, 14, 15 }; private final
-	 * int[] ANIMATED_RIGHT = { 16, 17, 18, 19, 20, 21, 22, 23 }; private final
-	 * int[] ANIMATED_LEFT = { 24, 25, 26, 27, 28, 29, 30, 31 };
+	 * private final int[] ANIMATED_DOWN = { 0, 2, 4, 7 }; private final int[]
+	 * ANIMATED_UP = { 8, 10, 12, 15 }; private final int[] ANIMATED_RIGHT = {
+	 * 16, 18, 20, 23 }; private final int[] ANIMATED_LEFT = { 24, 26, 28, 31 };
 	 */
 
-	private final int[] ANIMATED_DOWN = { 0, 2, 4, 7 };
-	private final int[] ANIMATED_UP = { 8, 10, 12, 15 };
-	private final int[] ANIMATED_RIGHT = { 16, 18, 20, 23 };
-	private final int[] ANIMATED_LEFT = { 24, 26, 28, 31 };
-
-	private int _speed = 12;
+	private int _speed = 5;
+	private boolean _isMoving = false;
 
 	private float _positionX = 0;
 	private float _positionY = 0;
@@ -45,15 +50,28 @@ public class MainCharacter implements ISprite {
 	private BitmapTextureAtlas _bta_charater_move;
 	private TiledTextureRegion _ttr_character_move;
 	private AnimatedSprite _as_character_move;
-
 	// private List<Items> _items;
 
-	private boolean _isMoving = false;
+	private boolean _isFirst = true;
 
-	public MainCharacter() {
-		// _items = new ArrayList<Items>();
+	private TMXTiledMap _tmxMap;
+	private TMXLayer _tmxLayer;
+
+	public MainCharacter(TMXTiledMap tmxMap, TMXLayer layer, float startX,
+			float startY) {
+		set_tmxMap(tmxMap);
+		set_tmxLayer(layer);
 		_duration = new long[8];
 		Arrays.fill(_duration, DURATION);
+		_positionX = startX;
+		_positionY = startY;
+	}
+
+	public MainCharacter() {
+		_duration = new long[8];
+		Arrays.fill(_duration, DURATION);
+		_positionX = 64;
+		_positionY = 32;
 	}
 
 	// ========|| onLoadResources ||===============
@@ -86,8 +104,9 @@ public class MainCharacter implements ISprite {
 	}
 
 	@Override
-	public void onLoadScene(Engine engine, Scene scene) {
+	public void onLoadScene(Engine engine, Scene scene, BoundCamera camera) {
 		_myScene = scene;
+		_myCamera = camera;
 
 		_as_character_stand = new AnimatedSprite(_positionX, _positionY,
 				_ttr_character_stand, engine.getVertexBufferObjectManager());
@@ -95,72 +114,78 @@ public class MainCharacter implements ISprite {
 		_as_character_move = new AnimatedSprite(_positionX, _positionY,
 				_ttr_character_move, engine.getVertexBufferObjectManager());
 
-		_myScene.attachChild(_as_character_stand);
-		playerMoveState();
+		/*
+		 * final PhysicsHandler physicsHandlerStand = new
+		 * PhysicsHandler(_as_character_stand);
+		 * _as_character_stand.registerUpdateHandler(physicsHandlerStand);
+		 * 
+		 * final PhysicsHandler physicsHandlerMove = new
+		 * PhysicsHandler(_as_character_move);
+		 * _as_character_move.registerUpdateHandler(physicsHandlerMove);
+		 */
+
+		playAnimation();
 	}
 
-	private void playerMoveState() {
+	private void playAnimation() {
 
-		if (_isMoving) {
-			if (MOVE_STATE == MoveStates.STAND) {
+		if (_isFirst) {
+			_myScene.attachChild(_as_character_stand);
+			_isFirst = false;
+		} else {
+			if (ImageState == CharacterImageStates.IMAGE_STAND) {
 				_myScene.detachChild(_as_character_stand);
 				_as_character_move.setPosition(_positionX, _positionY);
 				_myScene.attachChild(_as_character_move);
-			}
-		} else{
-			if (MOVE_STATE != MoveStates.STAND) {
-				_myScene.detachChild(_as_character_move);
-				_as_character_stand.setPosition(_positionX, _positionY);
-				_myScene.attachChild(_as_character_stand);
-			}
-		}
-		
-		for (int i = 0; i < _myScene.getChildCount(); i++) {
-			IEntity entity = _myScene.getChildByIndex(i);
-			if (entity.equals(_as_character_stand)) {
-				_myScene.detachChild(entity);
-				_myScene.attachChild(_as_character_move);
+				ImageState = CharacterImageStates.IMAGE_MOVE;
+			} else if (ImageState == CharacterImageStates.IMAGE_MOVE) {
+				// _myScene.detachChild(_as_character_move);
+				// _as_character_stand.setPosition(_positionX, _positionY);
+				// _myScene.attachChild(_as_character_stand);
+				ImageState = CharacterImageStates.IMAGE_UN_MOVE;
 			} else {
-				
+
 			}
 		}
 
-		switch (MOVE_STATE) {
-		case MoveStates.MOVE_LEFT: {
-			_as_character_move.animate(_duration, 24, 31, 1);
+		switch (MoveState) {
+		case CharacterStates.MOVE_LEFT: {
+			_as_character_move.animate(_duration, 24, 31, 1000);
 			break;
 		}
-		case MoveStates.MOVE_RIGHT: {
-			_as_character_move.animate(_duration, 16, 23, 1);
+		case CharacterStates.MOVE_RIGHT: {
+			_as_character_move.animate(_duration, 16, 23, 1000);
 			break;
 		}
-		case MoveStates.MOVE_UP: {
-			_as_character_move.animate(_duration, 8, 15, 1);
+		case CharacterStates.MOVE_UP: {
+			_as_character_move.animate(_duration, 8, 15, 1000);
 			break;
 		}
-		case MoveStates.MOVE_DOWN: {
-			_as_character_move.animate(_duration, 0, 7, 1);
+		case CharacterStates.MOVE_DOWN: {
+			_as_character_move.animate(_duration, 0, 7, 1000);
 			break;
 		}
-		case MoveStates.UN_MOVE_LEFT: {
-			// _as_character_move.animate(new long[]{100}, new int[]{24},
-			// 1);;
+		case CharacterStates.UN_MOVE_LEFT: {
+			_as_character_move.animate(new long[] { 100, 100 }, new int[] { 31,
+					31 }, 1);
 			break;
 		}
-		case MoveStates.UN_MOVE_RIGHT: {
-			// _as_character_move.animate(new long[]{100}, new int[]{16},
-			// 1);
+		case CharacterStates.UN_MOVE_RIGHT: {
+			_as_character_move.animate(new long[] { 100, 100 }, new int[] { 23,
+					23 }, 1);
 			break;
 		}
-		case MoveStates.UN_MOVE_UP: {
-			// _as_character_move.animate(new long[]{100}, new int[]{8}, 1);
+		case CharacterStates.UN_MOVE_UP: {
+			_as_character_move.animate(new long[] { 100, 100 }, new int[] { 15,
+					15 }, 1);
 			break;
 		}
-		case MoveStates.UN_MOVE_DOWN: {
-			// _as_character_move.animate(new long[]{100}, new int[]{0}, 1);
+		case CharacterStates.UN_MOVE_DOWN: {
+			_as_character_move.animate(new long[] { 100, 100 }, new int[] { 7,
+					7 }, 1);
 			break;
 		}
-		case MoveStates.STAND: {
+		case CharacterStates.STAND: {
 			_as_character_stand.animate(DURATION);
 			break;
 		}
@@ -169,15 +194,15 @@ public class MainCharacter implements ISprite {
 
 	// =========|| STATE ||================
 	public void setMoveState(int state) {
-		MOVE_STATE = state;
-		playerMoveState();
+		MoveState = state;
+		playAnimation();
 	}
 
 	public int getMoveState() {
-		return MOVE_STATE;
+		return MoveState;
 	}
 
-	// =========|| Position ||================
+	// =========|| Position ||=============
 	public void setPositionX(float positionX) {
 		_positionX = positionX;
 	}
@@ -190,6 +215,14 @@ public class MainCharacter implements ISprite {
 		_positionY = positionY;
 	}
 
+	public float getCenterX() {
+		return _positionX + (_ttr_character_move.getWidth()) / 2;
+	}
+
+	public float getCenterY() {
+		return _positionY + (_ttr_character_move.getHeight()) / 2;
+	}
+
 	public float getPositionY() {
 		return _positionY;
 	}
@@ -199,8 +232,7 @@ public class MainCharacter implements ISprite {
 		setPositionY(positionY);
 	}
 
-	// =======================================|| Move
-	// ||================================
+	// =========|| Move ||==========
 	public void moveX(float moveX) {
 		_positionX = moveX;
 		move();
@@ -217,49 +249,165 @@ public class MainCharacter implements ISprite {
 		move();
 	}
 
-	public void moveRelativeX(float moveRelativeX) {
-		_positionX += moveRelativeX;
-		move();
-	}
-
-	public void moveRelativeY(float moveRelativeY) {
-		_positionY += moveRelativeY;
-		move();
-	}
-
-	public void moveRelativeXY(float moveRelativeX, float moveRelativeY) {
-		_positionX += moveRelativeX;
-		_positionY += moveRelativeY;
-		move();
-	}
-
 	public void moveUp() {
-		moveRelativeY(-_speed);
+		_positionY -= _speed;
+		TMXTile tile = getTMXTileAt(get_tmxLayer(), _positionX, getCenterY());
+		if (collisionWall()) {
+			_positionX = 0;
+			return;
+		}
+
+		if (tile != null && collisionWith(tile)) {
+			_positionY += _speed;
+			return;
+		}
+
+		move();
 	}
 
 	public void moveDown() {
-		moveRelativeY(_speed);
+		_positionY += _speed;
+		TMXTile tile = getTMXTileAt(get_tmxLayer(), _positionX, _positionY
+				+ _ttr_character_move.getHeight());
+		if (collisionWall()) {
+			_positionY -= _speed;
+			return;
+		}
+
+		if (tile != null && collisionWith(tile)) {
+			_positionY -= _speed;
+			return;
+		}
+
+		move();
 	}
 
 	public void moveLeft() {
-		moveRelativeX(-_speed);
+		_positionX -= _speed;
+		TMXTile tile = getTMXTileAt(get_tmxLayer(), _positionX, _positionY
+				+ _ttr_character_move.getHeight());
+
+		if (collisionWall()) {
+			_positionX = 0;
+			return;
+		}
+		
+		if (tile != null && collisionWith(tile)) {
+			_positionX = (tile.getTileColumn() + 1) * 32;
+			return;
+		}
+
+		move();
 	}
 
 	public void moveRight() {
-		moveRelativeX(_speed);
+		_positionX += _speed;
+		TMXTile tile = getTMXTileAt(get_tmxLayer(), _positionX
+				+ _ttr_character_move.getWidth(), _positionY
+				+ _ttr_character_move.getHeight());
+		if (collisionWall()) {
+			_positionX -= _speed;
+			return;
+		}
+
+		if (tile != null && collisionWith(tile)) {
+			_positionX = (tile.getTileColumn() - 1) * 32;
+			return;
+		}
+
+		move();
+	}
+
+	private boolean collisionWall() {
+		if (_positionX < 0) {
+			return true;
+		}
+
+		if (_positionX + _ttr_character_move.getWidth() > _tmxLayer.getWidth()) {
+			return true;
+		}
+
+		if (_positionY < 0) {
+			return true;
+		}
+
+		if (_positionY + _ttr_character_move.getHeight() > _tmxLayer.getHeight()) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 * Move player
 	 */
 	private void move() {
+		// stop animation of _as_character_stand
 		_isMoving = true;
+		_as_character_stand.stopAnimation();
 		_as_character_move.setPosition(_positionX, _positionY);
 	}
 
-	public void stopMove()
-	{
+	public void stopMove() {
 		_isMoving = false;
 		_as_character_move.stopAnimation();
+		// ImageState = CharacterImageStates.IMAGE_UN_MOVE;
+		switch (this.MoveState) {
+		case CharacterStates.MOVE_UP:
+			this.setMoveState(CharacterStates.UN_MOVE_UP);
+			break;
+		case CharacterStates.MOVE_DOWN:
+			this.setMoveState(CharacterStates.UN_MOVE_DOWN);
+			break;
+		case CharacterStates.MOVE_LEFT:
+			this.setMoveState(CharacterStates.UN_MOVE_LEFT);
+			break;
+		case CharacterStates.MOVE_RIGHT:
+			this.setMoveState(CharacterStates.UN_MOVE_RIGHT);
+			break;
+		default:
+			break;
+		}
+	}
+
+	public boolean collisionWith(TMXTile tmxTile) {
+		TMXProperties<TMXTileProperty> tmxTileProperty = tmxTile
+				.getTMXTileProperties(get_tmxMap());
+		if (tmxTileProperty != null) {
+			String tileName = tmxTileProperty.get(0).getName();
+			if (tileName.equals("Collide")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public TMXTile getTMXTileAt(TMXLayer tmxLayer, float fX, float fY) {
+		TMXTile tmxTile = tmxLayer.getTMXTileAt(fX, fY);
+		return tmxTile;
+	}
+
+	public TMXTiledMap get_tmxMap() {
+		return _tmxMap;
+	}
+
+	public void set_tmxMap(TMXTiledMap _tmxMap) {
+		this._tmxMap = _tmxMap;
+	}
+
+	public TMXLayer get_tmxLayer() {
+		return _tmxLayer;
+	}
+
+	public void set_tmxLayer(TMXLayer _tmxLayer) {
+		this._tmxLayer = _tmxLayer;
+	}
+
+	public boolean isMoving() {
+		return _isMoving;
+	}
+	
+	public int getSpeed()
+	{
+		return _speed; 
 	}
 }

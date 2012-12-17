@@ -1,6 +1,6 @@
 package android.game.screen;
 
-import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
@@ -21,8 +21,8 @@ public class Screen extends SimpleBaseGameActivity{
 	protected float CAMERA_WIDTH = 480;
 	protected float CAMERA_HEIGHT = 320;
 	
-	protected ZoomCamera _camera;
-	protected Scene _scene;
+	protected BoundCamera _myCamera;
+	protected Scene _myScene;
 	
 	// Font
 	protected BitmapTextureAtlas _fontTexture;
@@ -35,9 +35,9 @@ public class Screen extends SimpleBaseGameActivity{
 		CAMERA_WIDTH = display.getWidth();
 		CAMERA_HEIGHT = display.getHeight();*/
 		
-		_camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+		_myCamera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
 		  EngineOptions en = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED, new RatioResolutionPolicy(
-		    CAMERA_WIDTH, CAMERA_HEIGHT), _camera);
+		    CAMERA_WIDTH, CAMERA_HEIGHT), _myCamera);
 		 
 		  return en;
 	}

@@ -36,7 +36,7 @@ public class MainCharacter implements ISprite {
 	 * 16, 18, 20, 23 }; private final int[] ANIMATED_LEFT = { 24, 26, 28, 31 };
 	 */
 
-	private int _speed = 5;
+	private int _speed = 8;
 	private boolean _isMoving = false;
 
 	private float _positionX = 0;
@@ -233,31 +233,23 @@ public class MainCharacter implements ISprite {
 	}
 
 	// =========|| Move ||==========
-	public void moveX(float moveX) {
-		_positionX = moveX;
-		move();
-	}
-
-	public void moveY(float moveY) {
-		_positionY = moveY;
-		move();
-	}
-
-	public void moveXY(float moveX, float moveY) {
-		_positionX = moveX;
-		_positionY = moveY;
-		move();
-	}
-
 	public void moveUp() {
 		_positionY -= _speed;
-		TMXTile tile = getTMXTileAt(get_tmxLayer(), _positionX, getCenterY());
+
+		TMXTile tileLeft = getTMXTileAt(get_tmxLayer(), _positionX + 5, getCenterY());
+		TMXTile tileRight = getTMXTileAt(get_tmxLayer(), _positionX + _ttr_character_move.getWidth() - 5, getCenterY());
+		
 		if (collisionWall()) {
-			_positionX = 0;
+			_positionY -= _speed;
 			return;
 		}
 
-		if (tile != null && collisionWith(tile)) {
+		if (tileLeft != null && collisionWith(tileLeft)) {
+			_positionY += _speed;
+			return;
+		}
+		
+		if (tileRight != null && collisionWith(tileRight)) {
 			_positionY += _speed;
 			return;
 		}
@@ -267,14 +259,22 @@ public class MainCharacter implements ISprite {
 
 	public void moveDown() {
 		_positionY += _speed;
-		TMXTile tile = getTMXTileAt(get_tmxLayer(), _positionX, _positionY
+		TMXTile tileLeft = getTMXTileAt(get_tmxLayer(), _positionX + 5, _positionY
 				+ _ttr_character_move.getHeight());
+		TMXTile tileRight = getTMXTileAt(get_tmxLayer(), _positionX + _ttr_character_move.getWidth() - 5, _positionY
+				+ _ttr_character_move.getHeight());
+		
 		if (collisionWall()) {
 			_positionY -= _speed;
 			return;
 		}
 
-		if (tile != null && collisionWith(tile)) {
+		if (tileLeft != null && collisionWith(tileLeft)) {
+			_positionY -= _speed;
+			return;
+		}
+		
+		if (tileRight != null && collisionWith(tileRight)) {
 			_positionY -= _speed;
 			return;
 		}
@@ -284,16 +284,22 @@ public class MainCharacter implements ISprite {
 
 	public void moveLeft() {
 		_positionX -= _speed;
-		TMXTile tile = getTMXTileAt(get_tmxLayer(), _positionX, _positionY
+		TMXTile tileBottom = getTMXTileAt(get_tmxLayer(), _positionX, _positionY
 				+ _ttr_character_move.getHeight());
+		TMXTile tileCenter = getTMXTileAt(get_tmxLayer(), _positionX, getCenterY());
 
 		if (collisionWall()) {
 			_positionX = 0;
 			return;
 		}
 		
-		if (tile != null && collisionWith(tile)) {
-			_positionX = (tile.getTileColumn() + 1) * 32;
+		if (tileCenter != null && collisionWith(tileCenter)) {
+			_positionX = (tileCenter.getTileColumn() + 1) * 32;
+			return;
+		}
+		
+		if (tileBottom != null && collisionWith(tileBottom)) {
+			_positionX = (tileBottom.getTileColumn() + 1) * 32;
 			return;
 		}
 
@@ -302,7 +308,9 @@ public class MainCharacter implements ISprite {
 
 	public void moveRight() {
 		_positionX += _speed;
-		TMXTile tile = getTMXTileAt(get_tmxLayer(), _positionX
+		TMXTile tileCenter = getTMXTileAt(get_tmxLayer(), _positionX
+				+ _ttr_character_move.getWidth(), getCenterY());
+		TMXTile tileBottom = getTMXTileAt(get_tmxLayer(), _positionX
 				+ _ttr_character_move.getWidth(), _positionY
 				+ _ttr_character_move.getHeight());
 		if (collisionWall()) {
@@ -310,8 +318,13 @@ public class MainCharacter implements ISprite {
 			return;
 		}
 
-		if (tile != null && collisionWith(tile)) {
-			_positionX = (tile.getTileColumn() - 1) * 32;
+		if (tileCenter != null && collisionWith(tileCenter)) {
+			_positionX = (tileCenter.getTileColumn() - 1) * 32;
+			return;
+		}
+		
+		if (tileBottom != null && collisionWith(tileBottom)) {
+			_positionX = (tileBottom.getTileColumn() - 1) * 32;
 			return;
 		}
 
@@ -409,5 +422,15 @@ public class MainCharacter implements ISprite {
 	public int getSpeed()
 	{
 		return _speed; 
+	}
+
+	public AnimatedSprite getSpriteMove()
+	{
+		return _as_character_move;
+	}
+	
+	public AnimatedSprite getSpriteStand()
+	{
+		return _as_character_stand;
 	}
 }

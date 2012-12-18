@@ -143,6 +143,11 @@ public class Controller {
 		}
 		return Area.NONE;
 	}
+	
+	/*private int getAreaTouch(float fX, float fY)
+	{
+		return 0;
+	}*/
 
 	// ===========================================================
 	// Inner and Anonymous Classes

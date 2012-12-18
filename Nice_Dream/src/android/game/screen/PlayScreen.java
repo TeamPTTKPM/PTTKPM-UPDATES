@@ -1,8 +1,5 @@
 package android.game.screen;
 
-import org.andengine.engine.handler.IUpdateHandler;
-import org.andengine.engine.handler.timer.ITimerCallback;
-import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.util.FPSLogger;
 import org.andengine.extension.tmx.TMXLayer;
@@ -44,18 +41,24 @@ public class PlayScreen extends Screen {
 		// Load Map
 		loadMap();
 
+		/* Make the camera not exceed the bounds of the TMXEntity. */
+		this._myCamera.setBounds(0, 0, tmxLayer.getWidth(),
+				tmxLayer.getHeight());
+		this._myCamera.setBoundsEnabled(true);
+		
 		_mainCharacter.set_tmxMap(_tmxTiledMap);
 		_mainCharacter.set_tmxLayer(tmxLayer);
 
 		// Load MainCharacter
 		_mainCharacter.onLoadScene(mEngine, _myScene, _myCamera);
 
+		_myCamera.setChaseEntity(_mainCharacter.getSpriteMove());
+		
 		// ScrollScreen
 		scrollScreen();
-
 		// load Control
 		loadControl();
-		
+
 		return this._myScene;
 	}
 
@@ -78,70 +81,31 @@ public class PlayScreen extends Screen {
 
 	private void scrollScreen() {
 
-		/* Make the camera not exceed the bounds of the TMXEntity. */
-		this._myCamera.setBounds(0, 0, tmxLayer.getWidth(),
-				tmxLayer.getHeight());
-		this._myCamera.setBoundsEnabled(true);
-
 		this._scrollDetector = new SurfaceScrollDetector(
 				new IScrollDetectorListener() {
 
 					@Override
 					public void onScrollStarted(ScrollDetector arg0, int arg1,
 							float pDistanceX, float pDistanceY) {
-						// _myCamera.offsetCenter(-pDistanceX,-pDistanceY);
+						//_myCamera.offsetCenter(-pDistanceX, -pDistanceY);
 					}
 
 					@Override
 					public void onScrollFinished(ScrollDetector arg0, int arg1,
 							float pDistanceX, float pDistanceY) {
-						// _myCamera.offsetCenter(-pDistanceX,-pDistanceY);
+						//_myCamera.offsetCenter(-pDistanceX, -pDistanceY);
 					}
 
 					@Override
 					public void onScroll(ScrollDetector pScrollDetector,
 							int arg1, float pDistanceX, float pDistanceY) {
 
-						/*if (_mainCharacter.isMoving()) {
-							float disXMin = _myCamera.getXMin()
-									- _mainCharacter.getPositionX();
-							float disXMax = _myCamera.getXMax()
-									- _mainCharacter.getPositionX();
-							float disYMin = _myCamera.getYMin()
-									- _mainCharacter.getPositionY();
-							float disYMax = _myCamera.getYMax()
-									- _mainCharacter.getPositionY();
-
-							if (Math.abs(disXMax) < _tmxTiledMap.getTileWidth() * 4
-									|| Math.abs(disXMin) < _tmxTiledMap
-											.getTileWidth() * 4
-									|| Math.abs(disYMin) < _tmxTiledMap
-											.getTileHeight() * 4
-									|| Math.abs(disYMax) < _tmxTiledMap
-											.getTileHeight() * 4) {
-								switch (_mainCharacter.getMoveState()) {
-								case CharacterStates.MOVE_UP:
-									_myCamera.offsetCenter(0, -_mainCharacter.getSpeed());
-									break;
-								case CharacterStates.MOVE_DOWN:
-									_myCamera.offsetCenter(0, _mainCharacter.getSpeed());
-									break;
-								case CharacterStates.MOVE_LEFT:
-									_myCamera.offsetCenter(-_mainCharacter.getSpeed(), 0);
-									break;
-								case CharacterStates.MOVE_RIGHT:
-									_myCamera.offsetCenter(_mainCharacter.getSpeed(), 0);
-									break;
-									
-								default:
-									break;
-								}
-							} */
-				
-							_myCamera.offsetCenter(-pDistanceX, -pDistanceY);
+						_myCamera.offsetCenter(-pDistanceX, -pDistanceY);
 					}
 				});
 	}
+
+	int i = 0;
 
 	private void loadControl() {
 		new Controller(_myScene, _myCamera, CAMERA_WIDTH, CAMERA_HEIGHT, 0.1f,
@@ -154,6 +118,7 @@ public class PlayScreen extends Screen {
 						if (activePointID == -1) {
 							_mainCharacter.stopMove();
 						} else {
+							/* if (!isMoveScene()) { */
 							switch (iResultArea) {
 							case Area.TOP:
 								if (_mainCharacter.getMoveState() != CharacterStates.MOVE_UP) {
@@ -189,15 +154,42 @@ public class PlayScreen extends Screen {
 								if (!_mainCharacter.isMoving()) {
 									_scrollDetector.setEnabled(true);
 									_scrollDetector.onTouchEvent(pSceneTouchEvent);
-								} else {
+								}
+								else
+								{
 									_scrollDetector.setEnabled(false);
 								}
+
 							default:
 								break;
 							}
-						}
-
+						} /*
+						 * else { //moveScene(0, 0); }
+						 */
 					}
-				});
+				}
+
+		);
+	}
+
+	protected boolean isMoveScene() {
+
+		float disXMin = _myCamera.getXMin() - _mainCharacter.getPositionX();
+		float disXMax = _myCamera.getXMax() - _mainCharacter.getPositionX();
+		float disYMin = _myCamera.getYMin() - _mainCharacter.getPositionY();
+		float disYMax = _myCamera.getYMax() - _mainCharacter.getPositionY();
+
+		if (Math.abs(disXMax) < _tmxTiledMap.getTileWidth() * 4
+				|| Math.abs(disXMin) < _tmxTiledMap.getTileWidth() * 4
+				|| Math.abs(disYMin) < _tmxTiledMap.getTileHeight() * 4
+				|| Math.abs(disYMax) < _tmxTiledMap.getTileHeight() * 4) {
+			return false;
+		}
+
+		return true;
+	}
+
+	protected void moveScene(float x, float y) {
+		_myScene.setPosition(x, y);
 	}
 }
